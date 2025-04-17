@@ -12,13 +12,13 @@
   #text(size: 10pt)[by Mohammed Ghannam (#link("https://github.com/mmghannam")[#text(blue)[\@mmghannam]])]
 ]
 
-#components.adaptive-columns(outline(indent: 1em))
+// #components.adaptive-columns(outline(indent: 1em))
 
 /* ---------------------------------------------------- */
 
 == How it started?
 
-- Late 2022: Learning Rust on the side. 
+- Late 2022: Learning Rust in my free time.
 - Rust is great, it would be amazing to use SCIP from Rust.
 - `good_lp` issue to add support for SCIP.
 
@@ -197,4 +197,6 @@ model.add(c!( y => x <= 10)); // indicator constraint
 - Enable support for adding parallel plugins. They run on a separate thread and can only communicate with SCIP through an event handler and a message queue to modify the model.
 
 
-= Thank you for your attention!
+--- 
+= 
+Thank you for your attention!
