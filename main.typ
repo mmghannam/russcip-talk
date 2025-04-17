@@ -16,6 +16,43 @@
 
 /* ---------------------------------------------------- */
 
+== How it started?
+
+- Late 2022: Learning Rust on the side. 
+- Rust is great, it would be amazing to use SCIP from Rust.
+- `good_lp` issue to add support for SCIP.
+
+== Why write a Rust interface for SCIP?
+- Fast.
+- Memory safe and thread safe at compile time.
+- No garbage collector.
+- Great community and ecosystem.
+- Great support for parallelism and concurrency.
+
+== First Step: bindings
+
+`scip_sys`: (unsafe) Rust bindings to SCIP's C API
+
+- covers all of SCIP's C API,
+- but verbose and not very idiomatic.
+
+// Show an example here from the scip_sys crate
+
+== Second Step: a Safe Wrapper
+`russcip`: a safe and idiomatic Rust wrapper around `scip_sys`
+
+=== Philosophy:
+- Use Rust's type system to enforce safety and correctness.
+
+== russcip Features
+- Automatic memory management.
+- Separate stages for model wrappers, avoiding many user errors at compile time. e.g. `focus_node()`
+- Aim to reduce boilerplate code and improve usability.
+- Simpler API for writing models (also through `good_lp`).
+
+
+= russcip Cheatsheet
+
 /*
 
 - Modeling 
@@ -134,3 +171,30 @@ t_x2 = 20
 ]
 ]
 ]
+
+
+
+
+/* ---------------------------------------------------- */
+== Future Work: Modeling
+
+- Enable more powerful modeling features for the many constraint types available in SCIP through a generic procmacro. 
+
+```rust 
+
+let x = model.add(var().int(0..).name("x"));
+let y = model.add(var().int(0..).name("y"));
+
+model.add(c!( 2 * x + y <= 10)); // linear constraint
+model.add(c!( x * y <= 10)); // nonlinear constraint
+
+model.add(c!( y => x <= 10)); // indicator constraint
+```
+
+--- 
+== Future Work: Parallel plugins
+
+- Enable support for adding parallel plugins. They run on a separate thread and can only communicate with SCIP through an event handler and a message queue to modify the model.
+
+
+= Thank you for your attention!
