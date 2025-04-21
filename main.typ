@@ -1,7 +1,11 @@
 #import "@preview/touying:0.5.5": *
 #import themes.simple: *
 
-#show: simple-theme.with(aspect-ratio: "16-9")
+#show: simple-theme.with(aspect-ratio: "16-9", header:"russcip")
+
+// chnage color of the slide titles
+
+
 
 #title-slide[
   #figure(image("russcip-logo.png", width: 100%))
@@ -45,13 +49,13 @@
 - Use Rust's type system to enforce safety and correctness.
 
 == russcip Features
+- Easy access to SCIP through the `bundled` feature.
 - Automatic memory management.
 - Separate stages for model wrappers, avoiding many user errors at compile time. e.g. `focus_node()`
 - Aim to reduce boilerplate code and improve usability.
 - Simpler API for writing models (also through `good_lp`).
 
-
-= russcip Cheatsheet
+= russcip Guide
 
 /*
 
