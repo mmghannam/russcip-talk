@@ -1,11 +1,11 @@
 #import "@preview/touying:0.5.5": *
 #import themes.simple: *
 
-#show: simple-theme.with(aspect-ratio: "16-9", header:"russcip")
-
-// chnage color of the slide titles
-
-
+// set text color to gray
+#show: simple-theme.with(
+  aspect-ratio: "16-9",
+  footer: "russcip - 24.04.2025",
+)
 
 #title-slide[
   #figure(image("russcip-logo.png", width: 100%))
@@ -27,7 +27,7 @@
 - `good_lp` issue to add support for SCIP.
 
 == Why write a Rust interface for SCIP?
-- Fast.
+- No-overhead when binding to C.
 - Memory safe and thread safe at compile time.
 - No garbage collector.
 - Great community and ecosystem.
@@ -37,23 +37,25 @@
 
 `scip_sys`: (unsafe) Rust bindings to SCIP's C API
 
-- covers all of SCIP's C API,
-- but verbose and not very idiomatic.
+- covers all of SCIP's C API
+- can be hard to work with.
 
 // Show an example here from the scip_sys crate
 
-== Second Step: a Safe Wrapper
+== Second Step -  a Safe Wrapper
 `russcip`: a safe and idiomatic Rust wrapper around `scip_sys`
 
-=== Philosophy:
+=== Philosophy
 - Use Rust's type system to enforce safety and correctness.
+- Hide complexity and boilerplate code.
 
-== russcip Features
+== Current Features
 - Easy access to SCIP through the `bundled` feature.
 - Automatic memory management.
 - Separate stages for model wrappers, avoiding many user errors at compile time. e.g. `focus_node()`
 - Aim to reduce boilerplate code and improve usability.
-- Simpler API for writing models (also through `good_lp`).
+- Simpler API for writing models (also through `good_lp`) and implementing callbacks.
+- Unsafe access to SCIP's C API when needed through the `ffi` module.
 
 = russcip Guide
 
@@ -188,38 +190,63 @@ t_x2 = 20
 = Plugins
 
 == Event Handlers
+SCIP broadcasts many events during the solving process, callbacks can be registered to listen to these events.
 
+=== Example
+event handler to print node data, #link("https://github.com/scipopt/russcip/blob/main/examples/node_event_handler.rs")[#text(blue)[here]].
 
 == Primal Heuristics
+Primal heuristics are used to find feasible solutions during the solving process.
+
+=== Example
+Primal heuristic that rounds the current LP solution, #link("https://github.com/scipopt/russcip/blob/main/examples/random_rounding.rs")[#text(blue)[here]].
 
 == Branching Rules
+Branching rules are used to select the next variable to branch on during the solving process (also enables custom branching).
+
+=== Example
+Most infeasible branching rule, #link("https://github.com/scipopt/russcip/blob/main/examples/most_infeasible_branching.rs")[#text(blue)[here]].
 
 == Separators
+Separators can add valid inequalities to the model to tighten the LP relaxation.
+
+=== Example
+Clique separator for set partitioning problem, #link("https://github.com/scipopt/russcip/blob/main/examples/clique_separator.rs")[#text(blue)[here]].
 
 == Column Generation: Pricers
 
-/* ---------------------------------------------------- */
+Column generation is a technique used to solve large-scale linear programming problems by solving a restricted master problem and generating new variables (columns) to add to the model.
+=== Example
+Pricer for the Cutting Stock Problem, #link("https://github.com/scipopt/russcip/blob/main/examples/cutting_stock.rs")[#text(blue)[here]].
+
+== Other SCIP features
+SCIP supports many other callbacks, such as:
+  - Reader
+  - Presolvers
+  - Cut selection
+  - Relaxators
+
+= Future Work
+
 == Future Work: Simple Event Handlers
 - Less boilerplate code for simple event handlers, by passing a closure and an event type.
+#text(size: 22pt)[
 ```rust
 let mut model = Model::default();
 // ... some variables and constraints
-model.set_callback(EventMask::NodeSolved, |model, event| {
+model.set_callback(EventMask::NODE_FOCUSED, |model, event| {
     let node_number = model.focus_node().number();
     let node_depth = model.focus_node().depth();
     println!("Solved node number: {}, at depth: {}", node_number, node_depth);
 });
 ```
-
+]
 == Future Work: Modeling
 
-- Enable more powerful modeling features for the many constraint types available in SCIP through a generic procmacro. 
+Enable more powerful modeling features for the many constraint types available in SCIP through a generic procedural macro. 
 
-```rust 
-
-let x = model.add(var().int(0..).name("x"));
-let y = model.add(var().int(0..).name("y"));
-
+#text(size: 20pt)[
+```rust
 model.add(c!( 2 * x + y <= 10)); // linear constraint
 model.add(c!( x * y <= 10)); // nonlinear constraint
 model.add(c!( e ^ y <= 10)); // exponential constraint
@@ -230,11 +257,11 @@ model.add(c!( y -> x <= 10)); // indicator constraint
 model.add(c!( (x + y == 10) && (x >= 5)  )); // AND constraint
 model.add(c!( (x + y == 10) || (x >= 5)  )); // OR constraint
 ```
-
+]
 --- 
 == Future Work: Parallel plugins
 
-- Enable support for adding parallel plugins. They run on a separate thread and can only communicate with SCIP through an event handler and a message queue to modify the model.
+Enable support for adding parallel plugins. They run on a separate thread and can only communicate with SCIP through an event handler and a message queue to modify the model.
 
 
 --- 
