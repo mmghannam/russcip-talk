@@ -178,8 +178,39 @@ t_x2 = 20
 
 
 
+== Setting Parameters
+
+
+== Emphasis Modes
+
+
+
+= Plugins
+
+== Event Handlers
+
+
+== Primal Heuristics
+
+== Branching Rules
+
+== Separators
+
+== Column Generation: Pricers
 
 /* ---------------------------------------------------- */
+== Future Work: Simple Event Handlers
+- Less boilerplate code for simple event handlers, by passing a closure and an event type.
+```rust
+let mut model = Model::default();
+// ... some variables and constraints
+model.set_callback(EventMask::NodeSolved, |model, event| {
+    let node_number = model.focus_node().number();
+    let node_depth = model.focus_node().depth();
+    println!("Solved node number: {}, at depth: {}", node_number, node_depth);
+});
+```
+
 == Future Work: Modeling
 
 - Enable more powerful modeling features for the many constraint types available in SCIP through a generic procmacro. 
@@ -191,8 +222,13 @@ let y = model.add(var().int(0..).name("y"));
 
 model.add(c!( 2 * x + y <= 10)); // linear constraint
 model.add(c!( x * y <= 10)); // nonlinear constraint
+model.add(c!( e ^ y <= 10)); // exponential constraint
+model.add(c!( log(y) <= 10)); // logarithmic constraint
+model.add(c!( sqrt(x) <= 10)); // square root constraint
 
-model.add(c!( y => x <= 10)); // indicator constraint
+model.add(c!( y -> x <= 10)); // indicator constraint
+model.add(c!( (x + y == 10) && (x >= 5)  )); // AND constraint
+model.add(c!( (x + y == 10) || (x >= 5)  )); // OR constraint
 ```
 
 --- 
@@ -202,5 +238,6 @@ model.add(c!( y => x <= 10)); // indicator constraint
 
 
 --- 
+
 = 
 Thank you for your attention!
