@@ -244,6 +244,9 @@ Column generation is a technique used to solve large-scale linear programming pr
 === Example
 Pricer for the Cutting Stock Problem, #link("https://github.com/scipopt/russcip/blob/main/examples/cutting_stock.rs")[#text(blue)[here]].
 
+== Current State
+
+#image("current_state.png", width: 80%)
 
 = Future Work
 
