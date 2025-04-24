@@ -182,9 +182,25 @@ t_x2 = 20
 
 == Setting Parameters
 
+SCIP has thousands of parameters. A full list can be found #link("https://www.scipopt.org/doc/html/PARAMETERS.php")[#text(blue)[here]]
+
+#text(size: 20pt)[
+```rust
+model.set_param("limits/softtime", 100.0);
+```
+]
 
 == Emphasis Modes
+SCIP has meta-parameters that can be set to influence the solving process.
 
+#text(size: 20pt)[
+```rust
+let mut model = Model::default();
+model.set_heuristics(ParamSetting::Aggressive);
+model.set_presolving(ParamSetting::Off);
+model.set_separating(ParamSetting::Aggressive);
+```
+]
 
 
 = Plugins
@@ -219,12 +235,6 @@ Column generation is a technique used to solve large-scale linear programming pr
 === Example
 Pricer for the Cutting Stock Problem, #link("https://github.com/scipopt/russcip/blob/main/examples/cutting_stock.rs")[#text(blue)[here]].
 
-== Other SCIP features
-SCIP supports many other callbacks, such as:
-  - Reader
-  - Presolvers
-  - Cut selection
-  - Relaxators
 
 = Future Work
 
@@ -241,6 +251,15 @@ model.set_callback(EventMask::NODE_FOCUSED, |model, event| {
 });
 ```
 ]
+
+== Future Work: More Safe Wrappers
+SCIP supports many other callbacks, such as:
+  - Reader
+  - Presolver
+  - Cut selector
+
+Many more API functions are available in SCIP, a full list can be found #link("https://github.com/scipopt/scip-sys")[#text(blue)[here]].  
+
 == Future Work: Modeling
 
 Enable more powerful modeling features for the many constraint types available in SCIP through a generic procedural macro. 
