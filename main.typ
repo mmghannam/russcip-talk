@@ -229,6 +229,15 @@ Separators can add valid inequalities to the model to tighten the LP relaxation.
 === Example
 Clique separator for set partitioning problem, #link("https://github.com/scipopt/russcip/blob/main/examples/clique_separator.rs")[#text(blue)[here]].
 
+
+== Constraint Handlers
+
+The main plugin type in SCIP, constraint handlers are used to add new constraints to the model and manage them.
+
+=== Example
+
+Subtour elimination constraint handler for the traveling salesman problem, #link("https://github.com/scipopt/russcip/blob/main/examples/tsp.rs")[#text(blue)[here]]
+
 == Column Generation: Pricers
 
 Column generation is a technique used to solve large-scale linear programming problems by solving a restricted master problem and generating new variables (columns) to add to the model.
